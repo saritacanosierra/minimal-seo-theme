@@ -48,6 +48,16 @@ Copia la carpeta `minimal-seo-theme` en:
 wp-content/themes/minimal-seo-theme/
 ```
 
+### Opción C — Generar ZIP (desarrolladores)
+
+Desde la carpeta del tema (requiere Python 3):
+
+```bash
+python scripts/package-theme.py
+```
+
+Crea `wp-content/themes/minimal-seo-theme.zip` con la estructura correcta para WordPress (excluye `.git` y `scripts/`).
+
 ---
 
 ## Configuración inicial
