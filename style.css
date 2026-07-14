@@ -1,0 +1,20 @@
+/*
+Theme Name: Minimal SEO Theme
+Theme URI: https://example.com/minimal-seo-theme
+Author: Minimal SEO Team
+Author URI: https://example.com
+Description: Tema WordPress ultraligero optimizado para SEO técnico y WPO. Inspirado en la filosofía Orbital: Menú Órbita móvil, clusters de navegación y jerarquía de encabezados estricta.
+Version: 2.5.5
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: minimal-seo-theme
+Tags: blog, one-column, custom-menu, featured-images, translation-ready, accessibility-ready
+
+Minimal SEO Theme — estilos base. Los estilos completos están en assets/css/theme.css.
+*/
+
+/* Fallback mínimo si theme.css no carga */
+body { font-family: system-ui, sans-serif; margin: 0; }

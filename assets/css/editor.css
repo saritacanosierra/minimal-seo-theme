@@ -1,0 +1,11 @@
+/* Editor styles — solo admin, no afecta frontend */
+@import url("theme.css");
+
+.editor-styles-wrapper {
+	font-family: system-ui, sans-serif;
+}
+
+.editor-styles-wrapper .mst-hero,
+.editor-styles-wrapper .mst-cta-banner {
+	margin: 1rem 0;
+}

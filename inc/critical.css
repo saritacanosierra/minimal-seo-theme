@@ -1,0 +1,97 @@
+/* Critical CSS — Above the fold */
+:root {
+	--mst-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--mst-color-text: #1a1a1a;
+	--mst-color-muted: #5c5c5c;
+	--mst-color-bg: #ffffff;
+	--mst-color-accent: #0066cc;
+	--mst-color-border: #e5e5e5;
+	--mst-radius: 8px;
+	--mst-max-width: 1200px;
+	--mst-content-width: 700px;
+	--mst-header-height: 56px;
+	--mst-space: 1rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-family: var(--mst-font);
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--mst-color-text);
+	background: var(--mst-color-bg);
+}
+
+img, svg, video {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+a {
+	color: var(--mst-color-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 2px;
+}
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	background: var(--mst-color-bg);
+	border-bottom: 1px solid var(--mst-color-border);
+	height: var(--mst-header-height);
+}
+
+.site-header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	max-width: var(--mst-max-width);
+	margin: 0 auto;
+	padding: 0 var(--mst-space);
+	height: 100%;
+}
+
+.site-brand {
+	font-weight: 700;
+	font-size: 1.125rem;
+	color: var(--mst-color-text);
+	text-decoration: none;
+}
+
+.site-brand:hover { text-decoration: none; }
+
+.site-brand--logo { margin: 0; line-height: 0; }
+.site-brand--logo .custom-logo-link { display: block; line-height: 0; }
+.site-brand--logo .custom-logo { max-height: 40px; width: auto; }
+
+.nav-toggle {
+	display: none;
+	background: none;
+	border: 1px solid var(--mst-color-border);
+	border-radius: var(--mst-radius);
+	padding: 0.4rem 0.6rem;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+}
+
+.site-main {
+	max-width: var(--mst-max-width);
+	margin: 0 auto;
+	padding: calc(var(--mst-space) * 1.5) var(--mst-space);
+}
+
+@media (max-width: 767px) {
+	.nav-toggle { display: inline-flex; align-items: center; gap: 0.35rem; }
+	.primary-nav { display: none; }
+	.primary-nav.is-open { display: block; position: absolute; top: var(--mst-header-height); left: 0; right: 0; background: var(--mst-color-bg); border-bottom: 1px solid var(--mst-color-border); padding: var(--mst-space); }
+}

@@ -1,0 +1,17 @@
+# Artefactos generados
+*.zip
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Dependencias (si se añaden en el futuro)
+node_modules/
+vendor/
