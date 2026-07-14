@@ -1,9 +1,10 @@
-# Minimal SEO Theme
+# Minimal SEO Theme Premium
 
-Tema WordPress ultraligero optimizado para **SEO técnico** y **WPO** (Web Performance Optimization). Inspirado en la filosofía de Orbital Theme: mobile-first, clusters de navegación en silo, Menú Órbita y jerarquía estricta de encabezados.
+El tema de WordPress definitivo para **nichos y SEO de marca**. Ultraligero, modular y mobile-first: clusters en silo, Menú Órbita con ofuscación de enlaces, TOC automática, conversión WebP y plantilla demo guiada (TEMA 1 + TEMA 2).
 
-**Versión:** 2.2.0  
-**Requisitos:** WordPress 6.0+, PHP 7.4+
+**Versión:** 2.5.5  
+**Requisitos:** WordPress 6.0+, PHP 7.4+  
+**Repositorio:** [github.com/saritacanosierra/minimal-seo-theme](https://github.com/saritacanosierra/minimal-seo-theme)
 
 ---
 
@@ -13,8 +14,11 @@ Tema WordPress ultraligero optimizado para **SEO técnico** y **WPO** (Web Perfo
 - **CSS nativo:** Grid + Flexbox, variables CSS, mobile-first
 - **JavaScript vanilla ES6** con carga `defer`
 - **CSS crítico inline** en el `<head>` para above-the-fold
-- **Menú Órbita** radial flotante en móvil (< 768px)
-- **Shortcode `[cluster]`** para arquitectura en silo
+- **Menú Órbita** radial en móvil con animación GPU y ofuscación de enlaces duplicados
+- **Shortcode `[cluster]`** para arquitectura en silo (TEMA 1, TEMA 2…)
+- **Plantilla demo** con textos `[EDITAR]` y guía en el admin
+- **Conversión automática a WebP** al subir imágenes
+- **Monetización** AdSense / afiliados al final de cada entrada
 - **Jerarquía SEO estricta** de H1–H6
 - **Customizer** para colores, tipografía, diseño, clusters, AdSense y constructor de inicio
 - **Constructor de inicio** (Hero, cluster, posts, CTA) sin page builder
@@ -32,8 +36,9 @@ Tema WordPress ultraligero optimizado para **SEO técnico** y **WPO** (Web Perfo
 
 1. Descarga o usa `minimal-seo-theme.zip`
 2. En WordPress: **Apariencia → Temas → Añadir nuevo → Subir tema**
-3. Activa **Minimal SEO Theme**
-4. Entra al **admin** una vez: se configura el sitio en modo blog y se crea la entrada demo
+3. Activa **Minimal SEO Theme Premium**
+4. Entra al **admin** una vez: se crea la plantilla demo (TEMA 1 + TEMA 2)
+5. Consulta **Apariencia → Guía: qué editar** para personalizar paso a paso
 
 ### Opción B — FTP / carpeta local
 
@@ -67,7 +72,7 @@ Ve a **Apariencia → Menús** y crea:
 
 ### 3. Customizer
 
-**Apariencia → Personalizar → Minimal SEO Theme**
+**Apariencia → Personalizar → Minimal SEO Theme Premium**
 
 #### Colores
 - Texto, texto secundario, fondo, acento y acento hover
@@ -101,7 +106,7 @@ Valores por defecto del shortcode `[cluster]`:
 - Etiqueta accesible opcional
 
 #### Constructor de inicio
-**Personalizar → Minimal SEO Theme → Constructor de inicio**
+**Personalizar → Minimal SEO Theme Premium → Constructor de inicio**
 
 Secciones opcionales para la portada en modo blog (`index.php`):
 
@@ -127,7 +132,7 @@ En el editor, panel lateral **Minimal SEO — Campos extra**:
 
 ### 5. Patrones de bloques
 
-En el editor de páginas: **Patrones → Minimal SEO Theme**
+En el editor de páginas: **Patrones → Minimal SEO Theme Premium**
 
 - Hero — Portada
 - Banner CTA
@@ -260,6 +265,8 @@ En pantallas menores a **768px** aparece un botón circular flotante en la esqui
 
 Configura un menú dedicado en **Apariencia → Menús → Menú Órbita (móvil)** o deja que use el menú principal automáticamente.
 
+Los enlaces que **repiten el menú de cabecera** (Contacto, legal, etc.) se ofuscan con `mst_obfuscated_link()` para no duplicar `href` visibles. Clases CSS del ítem: `mst-obfuscate` (forzar) o `mst-no-obfuscate` (evitar).
+
 ---
 
 ## Jerarquía SEO de encabezados
@@ -348,6 +355,15 @@ https://www.gnu.org/licenses/gpl-2.0.html
 ---
 
 ## Changelog
+
+### 2.5.5 — Premium + Menú Órbita pro
+- Rebrand **Minimal SEO Theme Premium**
+- Ofuscación inteligente en Menú Órbita (enlaces duplicados del menú principal)
+- Animación radial 100 % GPU (`translate3d`, `opacity`, sin reflow)
+- Plantilla demo **TEMA 1 + TEMA 2**, títulos cortos, imágenes WebP
+- Conversión automática JPG/PNG → WebP
+- Fix caja de código en Monetización (Customizer)
+- Guía admin: **Apariencia → Guía: qué editar**
 
 ### 2.2.0 — Silo Orbital completo
 - Página pilar estática `/seo-tecnico/` con cluster integrado
