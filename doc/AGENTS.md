@@ -2,7 +2,7 @@
 
 Guía para agentes de IA (Cursor) que editan este tema WordPress.
 
-**Versión actual:** 2.6.6  
+**Versión actual:** 2.6.7  
 **Ruta del tema:** `wp-content/themes/minimal-seo-theme/`  
 **Reglas Cursor:** `.cursor/rules/minimal-seo-theme*.mdc` (workspace raíz)
 

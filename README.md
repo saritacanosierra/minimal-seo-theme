@@ -2,7 +2,7 @@
 
 Tema WordPress ultraligero para nichos y SEO de marca (modelo Órbita).
 
-**Versión:** 2.6.6  
+**Versión:** 2.6.7  
 **Repositorio:** [github.com/saritacanosierra/minimal-seo-theme](https://github.com/saritacanosierra/minimal-seo-theme)
 
 ## Documentación
