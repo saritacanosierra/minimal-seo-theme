@@ -16,6 +16,13 @@ function mst_get_related_posts_query( $post_id = 0 ) {
 		return null;
 	}
 
+	if ( function_exists( 'mst_get_arch_related_query' ) ) {
+		$arch_query = mst_get_arch_related_query( $post_id );
+		if ( $arch_query && $arch_query->have_posts() ) {
+			return $arch_query;
+		}
+	}
+
 	$categories = wp_get_post_categories( $post_id );
 	if ( empty( $categories ) ) {
 		return null;

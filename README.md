@@ -2,7 +2,7 @@
 
 El tema de WordPress definitivo para **nichos y SEO de marca**. Ultraligero, modular y mobile-first: clusters en silo, Menú Órbita con ofuscación de enlaces, TOC automática, conversión WebP y plantilla demo guiada (TEMA 1 + TEMA 2).
 
-**Versión:** 2.5.5  
+**Versión:** 2.6.0  
 **Requisitos:** WordPress 6.0+, PHP 7.4+  
 **Repositorio:** [github.com/saritacanosierra/minimal-seo-theme](https://github.com/saritacanosierra/minimal-seo-theme)
 
@@ -23,6 +23,7 @@ El tema de WordPress definitivo para **nichos y SEO de marca**. Ultraligero, mod
 - **Customizer** para colores, tipografía, diseño, clusters, AdSense y constructor de inicio
 - **Constructor de inicio** (Hero, cluster, posts, CTA) sin page builder
 - **Campos meta** en entradas/páginas: subtítulo, entradilla, CTA, ocultar destacada
+- **Arquitectura SEO e interlinking** (modelo Órbita restrictivo): tipos, rangos de palabras, matriz de enlaces, anclas y brief JSON
 - **Patrones de bloques** nativos (Hero, CTA, 2 columnas, Cluster)
 - **Contenido demo** automático al activar (modo blog listo para usar)
 - **Schema.org** (WebSite + Article + BreadcrumbList)
@@ -365,6 +366,13 @@ https://www.gnu.org/licenses/gpl-2.0.html
 ---
 
 ## Changelog
+
+### 2.6.0 — Arquitectura SEO e interlinking operacional
+- Tipos de contenido con rangos de extensión: Pilar, Categoría, Informativo, Comparativo, Diagnóstico, Guía de compra
+- Meta box **Arquitectura SEO e interlinking** en entradas y páginas (Parent ID, links_in/out, e-commerce, anchor_texts)
+- Validación al guardar: palabras, jerarquía, anclas prohibidas y decisión comercial
+- Export de matriz JSON en **Apariencia → Matriz SEO**
+- Entradas relacionadas priorizan `links_out` de la matriz antes del fallback por categoría
 
 ### 2.5.5 — Premium + Menú Órbita pro
 - Rebrand **Minimal SEO Theme Premium**
