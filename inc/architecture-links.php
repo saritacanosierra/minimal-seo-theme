@@ -87,15 +87,14 @@ function mst_get_planned_outbound_links( $post_id ) {
 		);
 	}
 
-	if ( (bool) get_post_meta( $post_id, '_mst_arch_ecommerce_enabled', true ) ) {
-		$ecom_url  = esc_url_raw( get_post_meta( $post_id, '_mst_arch_ecommerce_url', true ) );
-		$ecom_dest = sanitize_text_field( get_post_meta( $post_id, '_mst_arch_ecommerce_destination', true ) );
-		if ( $ecom_url && false === stripos( $ecom_dest, 'sin enlace' ) ) {
+	if ( (bool) get_post_meta( $post_id, '_mst_arch_ecommerce_enabled', true ) && function_exists( 'mst_get_ecommerce_commercial_link' ) ) {
+		$commercial = mst_get_ecommerce_commercial_link( $post_id );
+		if ( $commercial ) {
 			$add_link(
-				'ecommerce',
-				$ecom_url,
-				$ecom_dest ? $ecom_dest : __( 'Ver productos recomendados', 'minimal-seo-theme' ),
-				'comercial'
+				$commercial['arch_id'],
+				$commercial['url'],
+				$commercial['anchor'],
+				$commercial['direction']
 			);
 		}
 	}
@@ -306,6 +305,20 @@ function mst_arch_meta_overrides_from_post( $post_id ) {
 
 	$overrides['_mst_arch_ecommerce_enabled'] = isset( $_POST['mst_arch_ecommerce_enabled'] );
 
+	if ( isset( $_POST['mst_arch_ecom_target_url'] ) ) {
+		$overrides['_mst_arch_ecom_target_url'] = esc_url_raw( wp_unslash( $_POST['mst_arch_ecom_target_url'] ) );
+	}
+
+	$tree_inputs = mst_ecommerce_decision_inputs_from_post();
+	if ( ! empty( $tree_inputs ) || isset( $_POST['mst_arch_ecommerce_enabled'] ) ) {
+		$overrides['_mst_arch_ecommerce_decision_tree'] = wp_json_encode( $tree_inputs );
+		$overrides['_mst_arch_ecom_treats_pain']            = $tree_inputs['treats_pain_or_injury'];
+		$overrides['_mst_arch_ecom_has_commercial_intent']  = $tree_inputs['has_commercial_intent'];
+		$overrides['_mst_arch_ecom_requires_comparison']    = $tree_inputs['requires_comparison'];
+		$overrides['_mst_arch_ecom_product_validated']      = $tree_inputs['product_is_validated'];
+		$overrides['_mst_arch_ecom_product_url_stable']     = $tree_inputs['product_url_is_stable'];
+	}
+
 	return $overrides;
 }
 
@@ -368,10 +381,18 @@ function mst_architecture_post_save_pipeline( $post_id ) {
 		foreach ( $overrides as $meta_key => $value ) {
 			if ( '_mst_arch_ecommerce_enabled' === $meta_key ) {
 				update_post_meta( $post_id, $meta_key, (bool) $value );
+			} elseif ( '_mst_arch_ecommerce_decision_tree' === $meta_key ) {
+				continue;
+			} elseif ( in_array( $meta_key, array( '_mst_arch_ecom_treats_pain', '_mst_arch_ecom_has_commercial_intent', '_mst_arch_ecom_requires_comparison', '_mst_arch_ecom_product_validated', '_mst_arch_ecom_product_url_stable' ), true ) ) {
+				update_post_meta( $post_id, $meta_key, (bool) $value );
 			} else {
 				update_post_meta( $post_id, $meta_key, mst_sanitize_architecture_meta( $value, $meta_key ) );
 			}
 		}
+	}
+
+	if ( function_exists( 'mst_persist_ecommerce_decision_tree' ) ) {
+		mst_persist_ecommerce_decision_tree( $post_id );
 	}
 
 	$issues = mst_validate_architecture( $post_id, $overrides, $content );

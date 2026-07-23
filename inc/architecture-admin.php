@@ -22,6 +22,8 @@ function mst_register_architecture_meta() {
 		'_mst_arch_anchor_texts',
 		'_mst_arch_brief',
 		'_mst_arch_validation',
+		'_mst_arch_ecommerce_decision_tree',
+		'_mst_arch_ecom_target_url',
 	);
 
 	foreach ( array( 'post', 'page' ) as $post_type ) {
@@ -53,6 +55,27 @@ function mst_register_architecture_meta() {
 				'sanitize_callback' => 'rest_sanitize_boolean',
 			)
 		);
+		foreach ( array(
+			'_mst_arch_ecom_treats_pain',
+			'_mst_arch_ecom_has_commercial_intent',
+			'_mst_arch_ecom_requires_comparison',
+			'_mst_arch_ecom_product_validated',
+			'_mst_arch_ecom_product_url_stable',
+		) as $bool_key ) {
+			register_post_meta(
+				$post_type,
+				$bool_key,
+				array(
+					'single'            => true,
+					'type'              => 'boolean',
+					'show_in_rest'      => true,
+					'auth_callback'     => function () {
+						return current_user_can( 'edit_posts' );
+					},
+					'sanitize_callback' => 'rest_sanitize_boolean',
+				)
+			);
+		}
 	}
 }
 add_action( 'init', 'mst_register_architecture_meta', 20 );
@@ -64,10 +87,10 @@ add_action( 'init', 'mst_register_architecture_meta', 20 );
  * @param string $meta_key Clave.
  */
 function mst_sanitize_architecture_meta( $value, $meta_key = '' ) {
-	if ( '_mst_arch_ecommerce_url' === $meta_key ) {
+	if ( '_mst_arch_ecommerce_url' === $meta_key || '_mst_arch_ecom_target_url' === $meta_key ) {
 		return esc_url_raw( $value );
 	}
-	if ( in_array( $meta_key, array( '_mst_arch_links_out', '_mst_arch_links_in', '_mst_arch_anchor_texts', '_mst_arch_brief', '_mst_arch_validation' ), true ) ) {
+	if ( in_array( $meta_key, array( '_mst_arch_links_out', '_mst_arch_links_in', '_mst_arch_anchor_texts', '_mst_arch_brief', '_mst_arch_validation', '_mst_arch_ecommerce_decision_tree' ), true ) ) {
 		return is_string( $value ) ? $value : wp_json_encode( $value );
 	}
 	return sanitize_text_field( (string) $value );
@@ -107,6 +130,8 @@ function mst_render_architecture_meta_box( $post ) {
 	$ecom_url  = get_post_meta( $post->ID, '_mst_arch_ecommerce_url', true );
 	$ecom_on   = (bool) get_post_meta( $post->ID, '_mst_arch_ecommerce_enabled', true );
 	$anchors   = get_post_meta( $post->ID, '_mst_arch_anchor_texts', true );
+	$ecom_tree = function_exists( 'mst_build_ecommerce_decision_tree' ) ? mst_build_ecommerce_decision_tree( $post->ID ) : array();
+	$ecom_actions = function_exists( 'mst_get_ecommerce_action_results' ) ? mst_get_ecommerce_action_results() : array();
 	$brief     = mst_build_arch_brief( $post->ID );
 	$issues    = mst_validate_architecture( $post->ID );
 	$matrix    = mst_get_link_matrix_rules();
@@ -118,6 +143,9 @@ function mst_render_architecture_meta_box( $post ) {
 	<?php if ( $guide_url ) : ?>
 		<p>
 			<a class="button" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( '¿Primera vez? Lee la guía fácil (sin tecnicismos)', 'minimal-seo-theme' ); ?></a>
+			<?php if ( function_exists( 'mst_get_architecture_examples_url' ) ) : ?>
+				<a class="button button-primary" href="<?php echo esc_url( mst_get_architecture_examples_url() ); ?>"><?php esc_html_e( 'Ver plantillas duplicables por tipo', 'minimal-seo-theme' ); ?></a>
+			<?php endif; ?>
 		</p>
 	<?php endif; ?>
 	<p class="description"><?php esc_html_e( 'Al guardar, el tema inserta enlaces según anchor_texts y links_out. Si hay errores críticos (rojos), no se puede publicar.', 'minimal-seo-theme' ); ?></p>
@@ -178,11 +206,36 @@ function mst_render_architecture_meta_box( $post ) {
 			<td>
 				<label>
 					<input type="checkbox" name="mst_arch_ecommerce_enabled" value="1" <?php checked( $ecom_on ); ?>>
-					<?php esc_html_e( 'Decision tomada sobre enlace comercial', 'minimal-seo-theme' ); ?>
+					<?php esc_html_e( 'Decisión tomada sobre enlace comercial', 'minimal-seo-theme' ); ?>
 				</label>
+
+				<fieldset class="mst-arch-ecom-tree" style="margin-top:12px;padding:12px;border:1px solid #c3c4c7;border-radius:4px">
+					<legend><strong><?php esc_html_e( 'Árbol de decisión e-commerce', 'minimal-seo-theme' ); ?></strong></legend>
+					<p class="description"><?php esc_html_e( 'Responde en orden. El tema calcula la acción comercial automáticamente.', 'minimal-seo-theme' ); ?></p>
+					<label><input type="checkbox" name="mst_arch_ecom_treats_pain" value="1" <?php checked( ! empty( $ecom_tree['treats_pain_or_injury'] ) ); ?>> <?php esc_html_e( '1. Trata dolor, irritación o lesión (omitir CTA comercial)', 'minimal-seo-theme' ); ?></label><br>
+					<label><input type="checkbox" name="mst_arch_ecom_has_commercial_intent" value="1" <?php checked( ! empty( $ecom_tree['has_commercial_intent'] ) ); ?>> <?php esc_html_e( '2. Hay intención comercial en la búsqueda/contenido', 'minimal-seo-theme' ); ?></label><br>
+					<label><input type="checkbox" name="mst_arch_ecom_requires_comparison" value="1" <?php checked( ! empty( $ecom_tree['requires_comparison'] ) ); ?>> <?php esc_html_e( '3. El usuario debe comparar opciones (categoría filtrada)', 'minimal-seo-theme' ); ?></label><br>
+					<label><input type="checkbox" name="mst_arch_ecom_product_validated" value="1" <?php checked( ! empty( $ecom_tree['product_is_validated'] ) ); ?>> <?php esc_html_e( '4. Hay necesidad específica y producto validado', 'minimal-seo-theme' ); ?></label><br>
+					<label><input type="checkbox" name="mst_arch_ecom_product_url_stable" value="1" <?php checked( ! empty( $ecom_tree['product_url_is_stable'] ) ); ?>> <?php esc_html_e( '5. La ficha de producto está completa y la URL es estable', 'minimal-seo-theme' ); ?></label>
+					<p>
+						<label for="mst_arch_ecom_target_url"><strong><?php esc_html_e( 'target_url', 'minimal-seo-theme' ); ?></strong></label><br>
+						<input type="url" class="large-text" id="mst_arch_ecom_target_url" name="mst_arch_ecom_target_url" value="<?php echo esc_url( $ecom_tree['target_url'] ?? '' ); ?>" placeholder="/categoria/lubricantes-sensibles?efecto=calido">
+					</p>
+					<?php if ( ! empty( $ecom_tree['action_result'] ) ) : ?>
+						<p><strong><?php esc_html_e( 'Acción calculada:', 'minimal-seo-theme' ); ?></strong>
+							<code><?php echo esc_html( $ecom_tree['action_result'] ); ?></code>
+							<?php if ( isset( $ecom_actions[ $ecom_tree['action_result'] ] ) ) : ?>
+								— <?php echo esc_html( $ecom_actions[ $ecom_tree['action_result'] ] ); ?>
+							<?php endif; ?>
+						</p>
+					<?php endif; ?>
+				</fieldset>
+
 				<p>
-					<input type="text" class="regular-text" id="mst_arch_ecommerce_destination" name="mst_arch_ecommerce_destination" value="<?php echo esc_attr( $ecom_dest ); ?>" placeholder="<?php esc_attr_e( 'Categoria e-commerce', 'minimal-seo-theme' ); ?>">
+					<label for="mst_arch_ecommerce_destination"><strong><?php esc_html_e( 'Texto del enlace / CTA', 'minimal-seo-theme' ); ?></strong></label><br>
+					<input type="text" class="regular-text" id="mst_arch_ecommerce_destination" name="mst_arch_ecommerce_destination" value="<?php echo esc_attr( $ecom_dest ); ?>" placeholder="<?php esc_attr_e( 'Categoría sensaciones / Sin enlace comercial', 'minimal-seo-theme' ); ?>">
 				</p>
+				<p class="description"><?php esc_html_e( 'URL comercial legacy (opcional): se sincroniza desde target_url si aplica.', 'minimal-seo-theme' ); ?></p>
 				<p>
 					<input type="url" class="large-text" id="mst_arch_ecommerce_url" name="mst_arch_ecommerce_url" value="<?php echo esc_url( $ecom_url ); ?>">
 				</p>
@@ -258,6 +311,10 @@ function mst_save_architecture_meta_box( $post_id ) {
 	}
 
 	update_post_meta( $post_id, '_mst_arch_ecommerce_enabled', isset( $_POST['mst_arch_ecommerce_enabled'] ) );
+
+	if ( function_exists( 'mst_persist_ecommerce_decision_tree' ) ) {
+		mst_persist_ecommerce_decision_tree( $post_id );
+	}
 
 	$brief  = mst_build_arch_brief( $post_id );
 	$issues = mst_validate_architecture( $post_id );

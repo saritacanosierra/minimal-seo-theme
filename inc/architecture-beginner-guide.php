@@ -165,6 +165,9 @@ function mst_render_architecture_beginner_guide_page() {
 
 		<p>
 			<a class="button button-primary" href="<?php echo esc_url( $posts_url ); ?>"><?php esc_html_e( 'Editar mis entradas', 'minimal-seo-theme' ); ?></a>
+			<?php if ( function_exists( 'mst_get_architecture_examples_url' ) ) : ?>
+				<a class="button" href="<?php echo esc_url( mst_get_architecture_examples_url() ); ?>"><?php esc_html_e( 'Plantillas por tipo (duplicar)', 'minimal-seo-theme' ); ?></a>
+			<?php endif; ?>
 			<a class="button" href="<?php echo esc_url( $matrix_url ); ?>"><?php esc_html_e( 'Ver Matriz SEO', 'minimal-seo-theme' ); ?></a>
 			<a class="button" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Guía general de la plantilla', 'minimal-seo-theme' ); ?></a>
 		</p>

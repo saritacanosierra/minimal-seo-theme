@@ -357,6 +357,7 @@ function mst_build_arch_brief( $post_id ) {
 		'ecommerce_enabled'     => (bool) get_post_meta( $post_id, '_mst_arch_ecommerce_enabled', true ),
 		'anchor_texts'          => mst_parse_anchor_texts( get_post_meta( $post_id, '_mst_arch_anchor_texts', true ) ),
 		'link_matrix'           => isset( mst_get_link_matrix_rules()[ $type ] ) ? mst_get_link_matrix_rules()[ $type ] : array(),
+		'ecommerce_decision_tree' => mst_build_ecommerce_decision_tree( $post_id ),
 	);
 
 	return apply_filters( 'mst_arch_brief', $brief, $post_id );
@@ -450,11 +451,13 @@ function mst_validate_architecture( $post_id, $meta_overrides = array(), $conten
 		$issues[] = array(
 			'level'   => 'error',
 			'code'    => 'ecommerce_undecided',
-			'message' => __( 'Debes decidir explícitamente si este contenido enlaza a e-commerce (marca la casilla y define destino o “sin enlace comercial”).', 'minimal-seo-theme' ),
+			'message' => __( 'Debes completar el árbol de decisión e-commerce (marca la casilla de decisión tomada).', 'minimal-seo-theme' ),
 		);
 	}
 
-	if ( $ecom_on && '' === $ecom_dest && '' === esc_url_raw( mst_arch_get_meta_value( $post_id, '_mst_arch_ecommerce_url', $meta_overrides ) ) ) {
+	if ( $ecom_on && function_exists( 'mst_validate_ecommerce_decision_tree' ) ) {
+		mst_validate_ecommerce_decision_tree( $post_id, $meta_overrides, $ecom_on, $issues );
+	} elseif ( $ecom_on && '' === $ecom_dest && '' === esc_url_raw( mst_arch_get_meta_value( $post_id, '_mst_arch_ecommerce_url', $meta_overrides ) ) ) {
 		$issues[] = array(
 			'level'   => 'warning',
 			'code'    => 'ecommerce_empty',

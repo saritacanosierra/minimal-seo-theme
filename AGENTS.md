@@ -2,7 +2,7 @@
 
 Guía para agentes de IA (Cursor) que editan este tema WordPress.
 
-**Versión actual:** 2.6.0  
+**Versión actual:** 2.6.2  
 **Ruta del tema:** `wp-content/themes/minimal-seo-theme/`  
 **Reglas Cursor:** `.cursor/rules/minimal-seo-theme*.mdc` (workspace raíz)
 
@@ -39,7 +39,10 @@ minimal-seo-theme/
     ├── home-builder.php   # Constructor de inicio (Customizer)
     ├── meta-fields.php    # Subtítulo, entradilla, CTA, hide featured
     ├── content-architecture.php  # Tipos, matriz, validación, brief JSON
+    ├── architecture-ecommerce-tree.php  # Árbol decisión e-commerce
     ├── architecture-admin.php    # Meta box editor + Matriz SEO admin
+    ├── architecture-beginner-guide.php
+    ├── architecture-links.php    # Auto-linkify + bloqueo publicación
     ├── block-patterns.php # Patrones Gutenberg del tema
     └── demo-content.php   # Seed demo + modo blog
 └── assets/css/ + assets/js/
