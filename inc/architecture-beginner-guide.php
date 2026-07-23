@@ -45,9 +45,15 @@ function mst_render_architecture_beginner_guide_page() {
 		<h1><?php esc_html_e( 'Guía fácil: cómo conectar tus artículos', 'minimal-seo-theme' ); ?></h1>
 		<p class="description"><?php esc_html_e( 'Sin código. Sin marketing complicado. Solo WordPress y estos pasos.', 'minimal-seo-theme' ); ?></p>
 
+		<?php if ( function_exists( 'mst_get_architecture_client_map_url' ) ) : ?>
+		<p>
+			<a class="button button-primary" href="<?php echo esc_url( mst_get_architecture_client_map_url() ); ?>"><?php esc_html_e( '¿Primera empresa con esta plantilla? Empieza por el Mapa de decisiones', 'minimal-seo-theme' ); ?></a>
+		</p>
+		<?php endif; ?>
+
 		<div class="mst-guide-card mst-guide-card--highlight">
 			<h2><?php esc_html_e( '¿Para qué sirve?', 'minimal-seo-theme' ); ?></h2>
-			<p><?php esc_html_e( 'Tu web es como una biblioteca: un libro grande (Pilar), estanterías (Categorías) y libros concretos (artículos). Esta herramienta te ayuda a planificar qué página enlaza con cuál ANTES de escribir.', 'minimal-seo-theme' ); ?></p>
+			<p><?php esc_html_e( 'Tu web es como una biblioteca: un mapa general (Pilar), estanterías por territorio (Categorías = TEMA 1 en la demo) y libros concretos (artículos). Esta herramienta te ayuda a planificar qué página enlaza con cuál ANTES de escribir.', 'minimal-seo-theme' ); ?></p>
 			<p><strong><?php esc_html_e( 'Dónde rellenarlo:', 'minimal-seo-theme' ); ?></strong>
 				<?php esc_html_e( 'Edita una entrada o página → baja a la caja «Arquitectura SEO e interlinking» → guarda.', 'minimal-seo-theme' ); ?>
 				<a href="<?php echo esc_url( $posts_url ); ?>"><?php esc_html_e( 'Ir a mis entradas', 'minimal-seo-theme' ); ?></a>
@@ -72,8 +78,8 @@ function mst_render_architecture_beginner_guide_page() {
 					</tr>
 					<tr>
 						<td><strong><?php esc_html_e( 'Post Categoría', 'minimal-seo-theme' ); ?></strong></td>
-						<td><?php esc_html_e( 'Agrupa artículos parecidos', 'minimal-seo-theme' ); ?></td>
-						<td><?php esc_html_e( 'Sensaciones al usar cremas', 'minimal-seo-theme' ); ?></td>
+						<td><?php esc_html_e( 'Índice de un territorio (en la demo: TEMA 1, TEMA 2). No es el pilar.', 'minimal-seo-theme' ); ?></td>
+						<td><?php esc_html_e( 'Sensaciones al usar lubricantes', 'minimal-seo-theme' ); ?></td>
 					</tr>
 					<tr>
 						<td><strong><?php esc_html_e( 'Informativo / Comparativo / etc.', 'minimal-seo-theme' ); ?></strong></td>

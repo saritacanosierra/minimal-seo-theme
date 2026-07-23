@@ -36,7 +36,7 @@ function mst_render_admin_welcome_notice() {
 			<li><?php esc_html_e( 'Artículos: menú Entradas → cambia los textos que dicen [EDITAR]', 'minimal-seo-theme' ); ?></li>
 			<li><?php esc_html_e( 'Categoría del tema: Entradas → Categorías', 'minimal-seo-theme' ); ?></li>
 			<li><?php esc_html_e( 'Menú del sitio: Apariencia → Menús (usa nombres cortos)', 'minimal-seo-theme' ); ?></li>
-			<li><?php esc_html_e( 'Enlaces entre artículos: Apariencia → Guía fácil: enlaces', 'minimal-seo-theme' ); ?></li>
+			<li><?php esc_html_e( 'Mapa de decisiones SEO: Apariencia → Mapa de decisiones (empieza aquí si es tu primera web con esta plantilla)', 'minimal-seo-theme' ); ?></li>
 		</ol>
 		<p>
 			<a class="button button-primary" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Ver guía completa paso a paso', 'minimal-seo-theme' ); ?></a>
@@ -191,7 +191,7 @@ function mst_render_template_guide_page() {
 				</li>
 				<li>
 					<strong><?php esc_html_e( '3. Páginas índice TEMA 1 y TEMA 2', 'minimal-seo-theme' ); ?></strong> —
-					<?php esc_html_e( 'Cada tema tiene su página índice con tarjetas de artículos. El título de la página es el H1 grande: pon solo el nombre corto del tema (ej: Recetas). La instrucción larga va en el subtítulo, no en el título. No borres el bloque [cluster]. En el menú usa nombres cortos.', 'minimal-seo-theme' ); ?>
+					<?php esc_html_e( 'En el mapa de decisiones esto es un territorio (Post categoría), no el pilar. Renombra TEMA 1 por tu territorio real (ej: Sensaciones). No borres el bloque [cluster].', 'minimal-seo-theme' ); ?>
 					<a href="<?php echo esc_url( $links['pillar'] ); ?>"><?php esc_html_e( 'Editar TEMA 1', 'minimal-seo-theme' ); ?></a>
 					·
 					<a href="<?php echo esc_url( $links['pillar_2'] ); ?>"><?php esc_html_e( 'Editar TEMA 2', 'minimal-seo-theme' ); ?></a>
@@ -207,8 +207,8 @@ function mst_render_template_guide_page() {
 					<a href="<?php echo esc_url( $links['categories'] ); ?>"><?php esc_html_e( 'Editar categorías', 'minimal-seo-theme' ); ?></a>
 				</li>
 				<li>
-					<strong><?php esc_html_e( '6. Página de oferta o contacto', 'minimal-seo-theme' ); ?></strong> —
-					<?php esc_html_e( 'El artículo donde vendes o pides datos de contacto.', 'minimal-seo-theme' ); ?>
+					<strong><?php esc_html_e( '6. Página de oferta', 'minimal-seo-theme' ); ?></strong> —
+					<?php esc_html_e( 'Conversión (venta/contacto). En arquitectura SEO: tipo Guía de compra. No confundir con artículos educativos.', 'minimal-seo-theme' ); ?>
 					<a href="<?php echo esc_url( $links['posts'] ); ?>"><?php esc_html_e( 'Editar artículos', 'minimal-seo-theme' ); ?></a>
 				</li>
 				<li>
@@ -217,11 +217,41 @@ function mst_render_template_guide_page() {
 					<a href="<?php echo esc_url( $links['menus'] ); ?>"><?php esc_html_e( 'Editar menús', 'minimal-seo-theme' ); ?></a>
 				</li>
 				<li>
-					<strong><?php esc_html_e( '8. Enlaces entre artículos (opcional)', 'minimal-seo-theme' ); ?></strong> —
-					<?php esc_html_e( 'Planifica qué artículo enlaza con cuál con la guía fácil y la caja «Arquitectura SEO» en cada entrada.', 'minimal-seo-theme' ); ?>
-					<a href="<?php echo esc_url( function_exists( 'mst_get_architecture_beginner_guide_url' ) ? mst_get_architecture_beginner_guide_url() : admin_url( 'themes.php?page=mst-architecture-beginner-guide' ) ); ?>"><?php esc_html_e( 'Abrir guía fácil: enlaces', 'minimal-seo-theme' ); ?></a>
+					<strong><?php esc_html_e( '8. Mapa de decisiones SEO', 'minimal-seo-theme' ); ?></strong> —
+					<?php esc_html_e( 'Antes de redactar: tipo, enlaces y marketplace en cada URL.', 'minimal-seo-theme' ); ?>
+					<a href="<?php echo esc_url( function_exists( 'mst_get_architecture_client_map_url' ) ? mst_get_architecture_client_map_url() : admin_url( 'themes.php?page=mst-architecture-client-map' ) ); ?>"><?php esc_html_e( 'Abrir mapa de decisiones', 'minimal-seo-theme' ); ?></a>
 				</li>
 			</ol>
+		</div>
+
+		<div class="mst-guide-card">
+			<h2><?php esc_html_e( 'TEMA vs Pilar vs Territorio (mapa del cliente)', 'minimal-seo-theme' ); ?></h2>
+			<table class="widefat striped">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Nombre', 'minimal-seo-theme' ); ?></th>
+						<th><?php esc_html_e( 'Qué es', 'minimal-seo-theme' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><strong><?php esc_html_e( 'Territorio', 'minimal-seo-theme' ); ?></strong></td>
+						<td><?php esc_html_e( 'Un bloque temático del negocio (ej: Sensaciones, Sabores). En la demo = TEMA 1.', 'minimal-seo-theme' ); ?></td>
+					</tr>
+					<tr>
+						<td><strong><?php esc_html_e( 'Post categoría', 'minimal-seo-theme' ); ?></strong></td>
+						<td><?php esc_html_e( 'Página índice del territorio (/tema-1/) con tarjetas [cluster].', 'minimal-seo-theme' ); ?></td>
+					</tr>
+					<tr>
+						<td><strong><?php esc_html_e( 'Post pilar', 'minimal-seo-theme' ); ?></strong></td>
+						<td><?php esc_html_e( 'Mapa de TODOS los territorios. Opcional al inicio; créalo cuando tengas varios.', 'minimal-seo-theme' ); ?></td>
+					</tr>
+					<tr>
+						<td><strong><?php esc_html_e( 'Oferta', 'minimal-seo-theme' ); ?></strong></td>
+						<td><?php esc_html_e( 'Página de conversión. Tipo Guía de compra en arquitectura SEO.', 'minimal-seo-theme' ); ?></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 
 		<div class="mst-guide-card">

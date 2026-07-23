@@ -2,7 +2,7 @@
 
 El tema de WordPress definitivo para **nichos y SEO de marca**. Ultraligero, modular y mobile-first: clusters en silo, Menú Órbita con ofuscación de enlaces, TOC automática, conversión WebP y plantilla demo guiada (TEMA 1 + TEMA 2).
 
-**Versión:** 2.6.2  
+**Versión:** 2.6.3  
 **Requisitos:** WordPress 6.0+, PHP 7.4+  
 **Repositorio:** [github.com/saritacanosierra/minimal-seo-theme](https://github.com/saritacanosierra/minimal-seo-theme)
 
@@ -366,6 +366,11 @@ https://www.gnu.org/licenses/gpl-2.0.html
 ---
 
 ## Changelog
+
+### 2.6.3 — Mapa de decisiones del cliente
+- **Apariencia → Mapa de decisiones**: vocabulario PDF ↔ WordPress, 8 puertas, árbol e-commerce y orden de publicación
+- Guía `GUIA-MAPA-DECISIONES-CLIENTE.md` y aclaración TEMA 1 = territorio (Post categoría), no pilar
+- Enlaces desde meta box, guía fácil y guía de plantilla hacia el mapa del cliente
 
 ### 2.6.2 — Árbol e-commerce + plantillas duplicables
 - Diagrama de flujo comercial (`ecommerce_decision_tree` en el brief JSON)

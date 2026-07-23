@@ -143,12 +143,18 @@ function mst_render_architecture_meta_box( $post ) {
 	<?php if ( $guide_url ) : ?>
 		<p>
 			<a class="button" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( '¿Primera vez? Lee la guía fácil (sin tecnicismos)', 'minimal-seo-theme' ); ?></a>
+			<?php if ( function_exists( 'mst_get_architecture_client_map_url' ) ) : ?>
+				<a class="button button-primary" href="<?php echo esc_url( mst_get_architecture_client_map_url() ); ?>"><?php esc_html_e( 'Mapa de decisiones (cliente)', 'minimal-seo-theme' ); ?></a>
+			<?php endif; ?>
 			<?php if ( function_exists( 'mst_get_architecture_examples_url' ) ) : ?>
 				<a class="button button-primary" href="<?php echo esc_url( mst_get_architecture_examples_url() ); ?>"><?php esc_html_e( 'Ver plantillas duplicables por tipo', 'minimal-seo-theme' ); ?></a>
 			<?php endif; ?>
 		</p>
 	<?php endif; ?>
-	<p class="description"><?php esc_html_e( 'Al guardar, el tema inserta enlaces según anchor_texts y links_out. Si hay errores críticos (rojos), no se puede publicar.', 'minimal-seo-theme' ); ?></p>
+	<p class="description">
+		<?php esc_html_e( 'Arquitectura antes que redacción. Rellena esto antes de escribir. Al guardar, el tema inserta enlaces según anchor_texts y links_out. Si hay errores críticos (rojos), no se puede publicar.', 'minimal-seo-theme' ); ?>
+		<?php esc_html_e( 'TEMA 1 de la demo = Post categoría (territorio), no Post pilar.', 'minimal-seo-theme' ); ?>
+	</p>
 
 	<?php if ( ! empty( $issues ) ) : ?>
 		<div class="mst-arch-notice mst-arch-notice--issues">

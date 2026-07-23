@@ -192,9 +192,12 @@ function mst_render_architecture_examples_page() {
 	?>
 	<div class="wrap mst-arch-examples">
 		<h1><?php esc_html_e( 'Plantillas duplicables por tipo de contenido', 'minimal-seo-theme' ); ?></h1>
-		<p class="description"><?php esc_html_e( 'Copia cada bloque al meta box «Arquitectura SEO». Sustituye títulos, IDs y URLs de tienda.', 'minimal-seo-theme' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Copia cada bloque al meta box «Arquitectura SEO». Ejemplos alineados al mapa de decisiones (lubricantes / Sensaciones). Sustituye títulos, IDs y URLs de tienda.', 'minimal-seo-theme' ); ?></p>
 		<p>
 			<a class="button button-primary" href="<?php echo esc_url( $posts_url ); ?>"><?php esc_html_e( 'Crear / editar entradas', 'minimal-seo-theme' ); ?></a>
+			<?php if ( function_exists( 'mst_get_architecture_client_map_url' ) ) : ?>
+				<a class="button" href="<?php echo esc_url( mst_get_architecture_client_map_url() ); ?>"><?php esc_html_e( 'Mapa de decisiones', 'minimal-seo-theme' ); ?></a>
+			<?php endif; ?>
 			<?php if ( $guide_url ) : ?>
 				<a class="button" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Guía fácil', 'minimal-seo-theme' ); ?></a>
 			<?php endif; ?>
