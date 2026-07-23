@@ -158,7 +158,7 @@ function mst_render_architecture_meta_box( $post ) {
 
 	<?php if ( ! empty( $issues ) ) : ?>
 		<div class="mst-arch-notice mst-arch-notice--issues">
-			<p><strong><?php esc_html_e( 'Estado de validacion', 'minimal-seo-theme' ); ?></strong></p>
+			<p><strong><?php esc_html_e( 'Estado de validación', 'minimal-seo-theme' ); ?></strong></p>
 			<ul>
 				<?php foreach ( $issues as $issue ) : ?>
 					<li class="mst-arch-notice__<?php echo esc_attr( $issue['level'] ); ?>">

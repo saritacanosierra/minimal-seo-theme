@@ -362,4 +362,4 @@ Guía de decisión + enlace comercial directo (si ficha estable) + relacionados.
 4. Sustituye `tutienda.com` por tu dominio real.  
 5. Guarda borrador → corrige rojos → publica.  
 
-*Minimal SEO Theme Premium — plantillas v2.6.3*
+*Minimal SEO Theme Premium — plantillas v2.6.4*

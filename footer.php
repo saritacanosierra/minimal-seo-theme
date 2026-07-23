@@ -10,7 +10,7 @@
 
 		<p class="site-footer__copy">
 			&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?>
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php bloginfo( 'name' ); ?></a>.
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a>.
 			<?php esc_html_e( 'Todos los derechos reservados.', 'minimal-seo-theme' ); ?>
 		</p>
 	</div>

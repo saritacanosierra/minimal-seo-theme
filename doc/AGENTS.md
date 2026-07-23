@@ -2,7 +2,7 @@
 
 Guía para agentes de IA (Cursor) que editan este tema WordPress.
 
-**Versión actual:** 2.6.3  
+**Versión actual:** 2.6.4  
 **Ruta del tema:** `wp-content/themes/minimal-seo-theme/`  
 **Reglas Cursor:** `.cursor/rules/minimal-seo-theme*.mdc` (workspace raíz)
 
@@ -128,7 +128,7 @@ Footer y widgets: **nunca** H1–H6 → usar `<p class="footer-widget__label">`.
 
 1. `MST_VERSION` en `functions.php`
 2. `Version:` en `style.css`
-3. Changelog en `README.md`
+3. Changelog en `doc/README.md`
 4. Si cambia seed demo → bump `mst_demo_seeded`
 5. Regenerar ZIP (ver abajo)
 
@@ -144,7 +144,7 @@ WordPress falla si el ZIP usa backslashes Windows. Regenerar con Python:
 # Salida: wp-content/themes/minimal-seo-theme.zip
 ```
 
-Incluir `README.md` y este `AGENTS.md` en el paquete.
+Incluir `README.md` (índice), `doc/README.md` y `doc/AGENTS.md` en el paquete.
 
 ---
 
@@ -175,5 +175,5 @@ Ver reglas completas en `.cursor/rules/`.
 - [ ] Sin regresión SEO (H1, schema, breadcrumbs)
 - [ ] Sin JS/CSS bloqueante ni dependencias nuevas
 - [ ] `php -l` en archivos PHP tocados
-- [ ] Versión + README si es release
+- [ ] Versión + `doc/README.md` si es release
 - [ ] ZIP regenerado si se empaqueta para distribución

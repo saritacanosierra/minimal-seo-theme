@@ -189,8 +189,8 @@ function mst_get_cluster_card_meta_html( $post_id = 0 ) {
 
 	$categories = get_the_category( $post_id );
 	if ( ! empty( $categories ) ) {
-		$cat = $categories[0];
-		$parts[] = '<span class="cluster-card__category"><a href="' . esc_url( get_category_link( $cat->term_id ) ) . '">' . esc_html( $cat->name ) . '</a></span>';
+		$cat     = $categories[0];
+		$parts[] = '<span class="cluster-card__category">' . esc_html( $cat->name ) . '</span>';
 	}
 
 	$parts[] = '<time class="cluster-card__date" datetime="' . esc_attr( get_the_date( 'c', $post_id ) ) . '">' . esc_html( get_the_date( '', $post_id ) ) . '</time>';
@@ -221,7 +221,6 @@ function mst_render_single_cluster_card( $post, $atts, $is_featured ) {
 	}
 
 	$html  = '<article class="cluster-card' . ( $is_featured ? ' cluster-card--featured' : '' ) . '">';
-	$html .= '<a class="cluster-card__link" href="' . esc_url( get_permalink( $post_id ) ) . '" aria-label="' . esc_attr( get_the_title( $post_id ) ) . '">';
 	$html .= '<div class="cluster-card__media"' . $bg_style . ' aria-hidden="true"></div>';
 	$html .= '<div class="cluster-card__overlay">';
 	$html .= mst_get_cluster_card_meta_html( $post_id );
@@ -235,9 +234,22 @@ function mst_render_single_cluster_card( $post, $atts, $is_featured ) {
 	}
 
 	$html .= '<span class="cluster-card__cta">' . $cta_text . '</span>';
-	$html .= '</div></a></article>';
+	$html .= '</div>';
+	$html .= '<a class="cluster-card__link" href="' . esc_url( get_permalink( $post_id ) ) . '" aria-label="' . esc_attr( get_the_title( $post_id ) ) . '">';
+	$html .= '<span class="screen-reader-text">' . esc_html( get_the_title( $post_id ) ) . '</span>';
+	$html .= '</a></article>';
 
 	return $html;
+}
+
+/**
+ * ¿La entrada del cluster está marcada como destacada?
+ *
+ * @param int   $post_id      ID del post.
+ * @param int[] $featured_ids IDs destacados resueltos.
+ */
+function mst_cluster_post_is_featured( $post_id, $featured_ids ) {
+	return in_array( (int) $post_id, $featured_ids, true ) || get_post_meta( $post_id, '_mst_cluster_featured', true );
 }
 
 /**
@@ -249,8 +261,7 @@ function mst_render_cluster_cards( $query, $atts ) {
 	$regular      = array();
 
 	foreach ( $query->posts as $post ) {
-		$is_featured = in_array( (int) $post->ID, $featured_ids, true ) || get_post_meta( $post->ID, '_mst_cluster_featured', true );
-		if ( $is_featured ) {
+		if ( mst_cluster_post_is_featured( $post->ID, $featured_ids ) ) {
 			$featured[] = $post;
 		} else {
 			$regular[] = $post;
@@ -259,8 +270,11 @@ function mst_render_cluster_cards( $query, $atts ) {
 
 	$html = '';
 	foreach ( array_merge( $featured, $regular ) as $post ) {
-		$is_featured = in_array( (int) $post->ID, $featured_ids, true ) || get_post_meta( $post->ID, '_mst_cluster_featured', true );
-		$html       .= mst_render_single_cluster_card( $post, $atts, (bool) $is_featured );
+		$html .= mst_render_single_cluster_card(
+			$post,
+			$atts,
+			(bool) mst_cluster_post_is_featured( $post->ID, $featured_ids )
+		);
 	}
 
 	return $html;
