@@ -70,10 +70,189 @@ function mst_maybe_seed_demo_content() {
 
 	mst_update_cta_urls_to_anchor( $pillar1 );
 	mst_configure_demo_theme_mods();
+	mst_seed_demo_primary_menu();
 
 	update_option( 'mst_demo_seeded', '2.5.3' );
 }
 add_action( 'admin_init', 'mst_maybe_seed_demo_content' );
+
+/**
+ * Asegurar menú demo con «Inicio» en instalaciones ya sembradas.
+ */
+function mst_maybe_seed_demo_menu() {
+	if ( get_option( 'mst_demo_menu_seeded', '' ) === '2.6.6' ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		return;
+	}
+
+	mst_ensure_primary_menu_has_home();
+	update_option( 'mst_demo_menu_seeded', '2.6.6' );
+}
+add_action( 'admin_init', 'mst_maybe_seed_demo_menu', 25 );
+
+/**
+ * ¿El menú incluye enlace a la portada?
+ *
+ * @param int $menu_id ID del menú.
+ */
+function mst_menu_has_home_link( $menu_id ) {
+	$menu_id = absint( $menu_id );
+	if ( ! $menu_id ) {
+		return false;
+	}
+
+	$home = trailingslashit( home_url( '/' ) );
+	$items = wp_get_nav_menu_items( $menu_id );
+
+	if ( ! $items ) {
+		return false;
+	}
+
+	foreach ( $items as $item ) {
+		if ( trailingslashit( (string) $item->url ) === $home ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Crear menú principal demo: Inicio + territorios TEMA 1 / TEMA 2.
+ */
+function mst_seed_demo_primary_menu() {
+	if ( ! current_user_can( 'edit_theme_options' ) ) {
+		return;
+	}
+
+	$menu_name = __( 'Menú principal (demo)', 'minimal-seo-theme' );
+	$menu      = wp_get_nav_menu_object( $menu_name );
+
+	if ( $menu && ! is_wp_error( $menu ) ) {
+		$menu_id = (int) $menu->term_id;
+	} else {
+		$menu_id = wp_create_nav_menu( $menu_name );
+	}
+
+	if ( is_wp_error( $menu_id ) || ! $menu_id ) {
+		return;
+	}
+
+	$existing_items = wp_get_nav_menu_items( $menu_id );
+	$existing_ids   = array();
+
+	if ( $existing_items ) {
+		foreach ( $existing_items as $item ) {
+			$existing_ids[] = (int) $item->ID;
+		}
+	}
+
+	if ( ! mst_menu_has_home_link( $menu_id ) ) {
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'  => __( 'Inicio', 'minimal-seo-theme' ),
+				'menu-item-url'    => home_url( '/' ),
+				'menu-item-status' => 'publish',
+				'menu-item-type'   => 'custom',
+				'menu-item-position' => 1,
+			)
+		);
+	}
+
+	$pages = array(
+		array(
+			'option' => 'mst_pillar_page_id',
+			'label'  => 'TEMA 1',
+		),
+		array(
+			'option' => 'mst_pillar_page_id_2',
+			'label'  => 'TEMA 2',
+		),
+	);
+
+	$position = 2;
+	foreach ( $pages as $page_config ) {
+		$page_id = (int) get_option( $page_config['option'], 0 );
+		if ( ! $page_id ) {
+			continue;
+		}
+
+		$already = false;
+		if ( $existing_items ) {
+			foreach ( $existing_items as $item ) {
+				if ( 'post_type' === $item->type && (int) $item->object_id === $page_id ) {
+					$already = true;
+					break;
+				}
+			}
+		}
+
+		if ( $already ) {
+			continue;
+		}
+
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'     => $page_config['label'],
+				'menu-item-object'    => 'page',
+				'menu-item-object-id' => $page_id,
+				'menu-item-type'      => 'post_type',
+				'menu-item-status'    => 'publish',
+				'menu-item-position'  => $position,
+			)
+		);
+		++$position;
+	}
+
+	$locations = get_theme_mod( 'nav_menu_locations', array() );
+	if ( empty( $locations['primary'] ) ) {
+		$locations['primary'] = $menu_id;
+	}
+	if ( empty( $locations['orbital'] ) ) {
+		$locations['orbital'] = $menu_id;
+	}
+	set_theme_mod( 'nav_menu_locations', $locations );
+}
+
+/**
+ * Añadir «Inicio» si falta en el menú principal asignado.
+ */
+function mst_ensure_primary_menu_has_home() {
+	$locations = get_theme_mod( 'nav_menu_locations', array() );
+	$menu_id   = ! empty( $locations['primary'] ) ? (int) $locations['primary'] : 0;
+
+	if ( ! $menu_id ) {
+		mst_seed_demo_primary_menu();
+		return;
+	}
+
+	if ( mst_menu_has_home_link( $menu_id ) ) {
+		if ( empty( $locations['orbital'] ) ) {
+			$locations['orbital'] = $menu_id;
+			set_theme_mod( 'nav_menu_locations', $locations );
+		}
+		return;
+	}
+
+	wp_update_nav_menu_item(
+		$menu_id,
+		0,
+		array(
+			'menu-item-title'  => __( 'Inicio', 'minimal-seo-theme' ),
+			'menu-item-url'    => home_url( '/' ),
+			'menu-item-status' => 'publish',
+			'menu-item-type'   => 'custom',
+			'menu-item-position' => 1,
+		)
+	);
+}
 
 /**
  * Renombrar slugs legacy (seo-tecnico → tema-1).
@@ -443,7 +622,7 @@ function mst_seed_pillar_page( $config ) {
 	$existing = get_page_by_path( $slug, OBJECT, 'page' );
 
 	$hint = 1 === $theme_num
-		? __( 'TEMA 1 — PÁGINA ÍNDICE: agrupa los artículos de tu primer tema. En el menú pon un nombre corto (ej: Recetas). No borres el bloque [cluster] — muestra las tarjetas solas.', 'minimal-seo-theme' )
+		? __( 'TEMA 1 — PÁGINA ÍNDICE: agrupa los artículos de tu primer tema. En el menú: Inicio (portada) + nombre corto del territorio (ej: Sensaciones). No borres el bloque [cluster].', 'minimal-seo-theme' )
 		: __( 'TEMA 2 — PÁGINA ÍNDICE: segundo tema de ejemplo. Así se ve un sitio con dos temas. Crea una categoría TEMA 2, artículos en esa categoría y este bloque [cluster] con el slug correcto.', 'minimal-seo-theme' );
 
 	$content  = mst_get_editor_hint_html( $hint );

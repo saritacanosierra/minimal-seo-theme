@@ -273,6 +273,7 @@ function mst_render_home_structure_guide() {
 		<p><?php esc_html_e( 'Esta es la portada (blog). No es la «guía completa» ni el post pilar.', 'minimal-seo-theme' ); ?></p>
 		<ul class="mst-home-structure__list">
 			<li><strong><?php esc_html_e( 'Portada', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'acceso rápido y resumen de contenidos', 'minimal-seo-theme' ); ?></li>
+			<li><strong><?php esc_html_e( 'Inicio', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'portada del blog (/)', 'minimal-seo-theme' ); ?></li>
 			<li><strong><?php esc_html_e( 'TEMA 1 / TEMA 2', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'territorios (páginas índice con [cluster])', 'minimal-seo-theme' ); ?></li>
 			<li><strong><?php esc_html_e( 'Guía completa', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'post pilar opcional que agrupa todos los territorios', 'minimal-seo-theme' ); ?></li>
 		</ul>

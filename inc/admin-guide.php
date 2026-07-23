@@ -213,7 +213,7 @@ function mst_render_template_guide_page() {
 				</li>
 				<li>
 					<strong><?php esc_html_e( '7. Menú del sitio', 'minimal-seo-theme' ); ?></strong> —
-					<?php esc_html_e( 'Inicio, tu tema (nombre corto) y Contacto.', 'minimal-seo-theme' ); ?>
+					<?php esc_html_e( 'Inicio (portada), territorio TEMA 1/2 y contacto. Son páginas distintas.', 'minimal-seo-theme' ); ?>
 					<a href="<?php echo esc_url( $links['menus'] ); ?>"><?php esc_html_e( 'Editar menús', 'minimal-seo-theme' ); ?></a>
 				</li>
 				<li>

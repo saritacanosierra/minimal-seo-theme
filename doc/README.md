@@ -2,7 +2,7 @@
 
 El tema de WordPress definitivo para **nichos y SEO de marca**. Ultraligero, modular y mobile-first: clusters en silo, Menú Órbita con ofuscación de enlaces, TOC automática, conversión WebP y plantilla demo guiada (TEMA 1 + TEMA 2).
 
-**Versión:** 2.6.5  
+**Versión:** 2.6.6  
 **Requisitos:** WordPress 6.0+, PHP 7.4+  
 **Repositorio:** [github.com/saritacanosierra/minimal-seo-theme](https://github.com/saritacanosierra/minimal-seo-theme)
 
@@ -372,6 +372,10 @@ https://www.gnu.org/licenses/gpl-2.0.html
 ---
 
 ## Changelog
+
+### 2.6.6 — Menú demo con enlace Inicio
+- Menú principal sembrado con **Inicio** (portada) + TEMA 1 + TEMA 2
+- Migración automática que añade «Inicio» si falta en menús existentes
 
 ### 2.6.5 — Portada más clara y tarjetas demo sin superposición
 - Gradientes abstractos en tarjetas demo (sin texto de imagen superpuesto al título)
