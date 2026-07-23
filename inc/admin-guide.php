@@ -36,6 +36,7 @@ function mst_render_admin_welcome_notice() {
 			<li><?php esc_html_e( 'Artículos: menú Entradas → cambia los textos que dicen [EDITAR]', 'minimal-seo-theme' ); ?></li>
 			<li><?php esc_html_e( 'Categoría del tema: Entradas → Categorías', 'minimal-seo-theme' ); ?></li>
 			<li><?php esc_html_e( 'Menú del sitio: Apariencia → Menús (usa nombres cortos)', 'minimal-seo-theme' ); ?></li>
+			<li><?php esc_html_e( 'Enlaces entre artículos: Apariencia → Guía fácil: enlaces', 'minimal-seo-theme' ); ?></li>
 		</ol>
 		<p>
 			<a class="button button-primary" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Ver guía completa paso a paso', 'minimal-seo-theme' ); ?></a>
@@ -215,6 +216,11 @@ function mst_render_template_guide_page() {
 					<?php esc_html_e( 'Inicio, tu tema (nombre corto) y Contacto.', 'minimal-seo-theme' ); ?>
 					<a href="<?php echo esc_url( $links['menus'] ); ?>"><?php esc_html_e( 'Editar menús', 'minimal-seo-theme' ); ?></a>
 				</li>
+				<li>
+					<strong><?php esc_html_e( '8. Enlaces entre artículos (opcional)', 'minimal-seo-theme' ); ?></strong> —
+					<?php esc_html_e( 'Planifica qué artículo enlaza con cuál con la guía fácil y la caja «Arquitectura SEO» en cada entrada.', 'minimal-seo-theme' ); ?>
+					<a href="<?php echo esc_url( function_exists( 'mst_get_architecture_beginner_guide_url' ) ? mst_get_architecture_beginner_guide_url() : admin_url( 'themes.php?page=mst-architecture-beginner-guide' ) ); ?>"><?php esc_html_e( 'Abrir guía fácil: enlaces', 'minimal-seo-theme' ); ?></a>
+				</li>
 			</ol>
 		</div>
 
@@ -319,6 +325,9 @@ function mst_render_dashboard_guide_widget() {
 		<li><a href="<?php echo esc_url( $links['pillar_2'] ); ?>"><?php esc_html_e( 'Editar página índice TEMA 2', 'minimal-seo-theme' ); ?></a></li>
 		<li><a href="<?php echo esc_url( $links['posts'] ); ?>"><?php esc_html_e( 'Editar artículos ([EDITAR])', 'minimal-seo-theme' ); ?></a></li>
 		<li><a href="<?php echo esc_url( $links['menus'] ); ?>"><?php esc_html_e( 'Configurar menú (nombres cortos)', 'minimal-seo-theme' ); ?></a></li>
+		<?php if ( function_exists( 'mst_get_architecture_beginner_guide_url' ) ) : ?>
+			<li><a href="<?php echo esc_url( mst_get_architecture_beginner_guide_url() ); ?>"><?php esc_html_e( 'Guía fácil: enlaces entre artículos', 'minimal-seo-theme' ); ?></a></li>
+		<?php endif; ?>
 	</ul>
 	<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'themes.php?page=mst-template-guide' ) ); ?>"><?php esc_html_e( 'Ver guía completa', 'minimal-seo-theme' ); ?></a></p>
 	<?php

@@ -194,12 +194,16 @@ function mst_get_word_count_range_label( $type ) {
  *
  * @param int $post_id ID del post.
  */
-function mst_count_post_words( $post_id = 0 ) {
+function mst_count_post_words( $post_id = 0, $content_override = null ) {
 	$post_id = $post_id ? $post_id : get_the_ID();
-	if ( ! $post_id ) {
+	if ( ! $post_id && null === $content_override ) {
 		return 0;
 	}
-	$content = get_post_field( 'post_content', $post_id );
+	if ( null !== $content_override ) {
+		$content = $content_override;
+	} else {
+		$content = get_post_field( 'post_content', $post_id );
+	}
 	$content = wp_strip_all_tags( strip_shortcodes( (string) $content ) );
 	$count   = str_word_count( $content );
 	return (int) apply_filters( 'mst_arch_word_count', $count, $post_id );
@@ -364,16 +368,41 @@ function mst_build_arch_brief( $post_id ) {
  * @param int $post_id ID del post.
  * @return array<int, array<string, string>> Errores y avisos.
  */
-function mst_validate_architecture( $post_id ) {
-	$issues   = array();
-	$type     = sanitize_key( get_post_meta( $post_id, '_mst_arch_content_type', true ) );
-	$defs     = mst_get_content_type_definitions();
-	$arch_id  = sanitize_text_field( get_post_meta( $post_id, '_mst_arch_id', true ) );
-	$parent   = sanitize_text_field( get_post_meta( $post_id, '_mst_arch_parent_id', true ) );
-	$links_out = mst_parse_arch_id_list( get_post_meta( $post_id, '_mst_arch_links_out', true ) );
-	$anchors  = mst_parse_anchor_texts( get_post_meta( $post_id, '_mst_arch_anchor_texts', true ) );
-	$ecom_on  = (bool) get_post_meta( $post_id, '_mst_arch_ecommerce_enabled', true );
-	$ecom_dest = sanitize_text_field( get_post_meta( $post_id, '_mst_arch_ecommerce_destination', true ) );
+function mst_arch_get_meta_value( $post_id, $meta_key, $overrides = array() ) {
+	if ( array_key_exists( $meta_key, $overrides ) ) {
+		return $overrides[ $meta_key ];
+	}
+	return get_post_meta( $post_id, $meta_key, true );
+}
+
+/**
+ * ¿Aplicar validación estricta a esta URL?
+ *
+ * @param int $post_id ID del post.
+ */
+function mst_arch_should_enforce_validation( $post_id ) {
+	$type    = (string) mst_arch_get_meta_value( $post_id, '_mst_arch_content_type' );
+	$arch_id = (string) mst_arch_get_meta_value( $post_id, '_mst_arch_id' );
+	return '' !== $type || '' !== $arch_id;
+}
+
+/**
+ * Validar brief / meta de arquitectura.
+ *
+ * @param int                  $post_id          ID del post.
+ * @param array<string, mixed> $meta_overrides   Meta opcional (REST / guardado).
+ * @param string|null          $content_override Contenido para contar palabras.
+ */
+function mst_validate_architecture( $post_id, $meta_overrides = array(), $content_override = null ) {
+	$issues    = array();
+	$type      = sanitize_key( mst_arch_get_meta_value( $post_id, '_mst_arch_content_type', $meta_overrides ) );
+	$defs      = mst_get_content_type_definitions();
+	$arch_id   = sanitize_text_field( mst_arch_get_meta_value( $post_id, '_mst_arch_id', $meta_overrides ) );
+	$parent    = sanitize_text_field( mst_arch_get_meta_value( $post_id, '_mst_arch_parent_id', $meta_overrides ) );
+	$links_out = mst_parse_arch_id_list( mst_arch_get_meta_value( $post_id, '_mst_arch_links_out', $meta_overrides ) );
+	$anchors   = mst_parse_anchor_texts( mst_arch_get_meta_value( $post_id, '_mst_arch_anchor_texts', $meta_overrides ) );
+	$ecom_on   = (bool) mst_arch_get_meta_value( $post_id, '_mst_arch_ecommerce_enabled', $meta_overrides );
+	$ecom_dest = sanitize_text_field( mst_arch_get_meta_value( $post_id, '_mst_arch_ecommerce_destination', $meta_overrides ) );
 
 	if ( '' === $type ) {
 		$issues[] = array(
@@ -425,7 +454,7 @@ function mst_validate_architecture( $post_id ) {
 		);
 	}
 
-	if ( $ecom_on && '' === $ecom_dest && '' === esc_url_raw( get_post_meta( $post_id, '_mst_arch_ecommerce_url', true ) ) ) {
+	if ( $ecom_on && '' === $ecom_dest && '' === esc_url_raw( mst_arch_get_meta_value( $post_id, '_mst_arch_ecommerce_url', $meta_overrides ) ) ) {
 		$issues[] = array(
 			'level'   => 'warning',
 			'code'    => 'ecommerce_empty',
@@ -471,7 +500,7 @@ function mst_validate_architecture( $post_id ) {
 		}
 	}
 
-	$words = mst_count_post_words( $post_id );
+	$words = mst_count_post_words( $post_id, $content_override );
 	if ( $words > 0 && ( $words < $def['min_words'] || $words > $def['max_words'] ) ) {
 		$issues[] = array(
 			'level'   => 'warning',

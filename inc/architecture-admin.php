@@ -113,8 +113,14 @@ function mst_render_architecture_meta_box( $post ) {
 	$rules     = isset( $matrix[ $type ] ) ? $matrix[ $type ] : null;
 	$words     = mst_count_post_words( $post->ID );
 	$types     = mst_get_content_type_definitions();
+	$guide_url = function_exists( 'mst_get_architecture_beginner_guide_url' ) ? mst_get_architecture_beginner_guide_url() : '';
 	?>
-	<p class="description"><?php esc_html_e( 'Define el brief de arquitectura antes de redactar. El interlinking queda registrado aqui y se valida al guardar.', 'minimal-seo-theme' ); ?></p>
+	<?php if ( $guide_url ) : ?>
+		<p>
+			<a class="button" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( '¿Primera vez? Lee la guía fácil (sin tecnicismos)', 'minimal-seo-theme' ); ?></a>
+		</p>
+	<?php endif; ?>
+	<p class="description"><?php esc_html_e( 'Al guardar, el tema inserta enlaces según anchor_texts y links_out. Si hay errores críticos (rojos), no se puede publicar.', 'minimal-seo-theme' ); ?></p>
 
 	<?php if ( ! empty( $issues ) ) : ?>
 		<div class="mst-arch-notice mst-arch-notice--issues">
@@ -319,9 +325,13 @@ function mst_render_architecture_matrix_page() {
 	}
 	$matrix     = mst_export_architecture_matrix();
 	$directions = mst_get_interlinking_directions();
+	$guide_url  = function_exists( 'mst_get_architecture_beginner_guide_url' ) ? mst_get_architecture_beginner_guide_url() : '';
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Matriz de arquitectura SEO', 'minimal-seo-theme' ); ?></h1>
+		<?php if ( $guide_url ) : ?>
+			<p><a class="button button-primary" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Guía fácil para principiantes', 'minimal-seo-theme' ); ?></a></p>
+		<?php endif; ?>
 		<table class="widefat striped">
 			<thead><tr><th><?php esc_html_e( 'Direccion', 'minimal-seo-theme' ); ?></th><th><?php esc_html_e( 'Flujo', 'minimal-seo-theme' ); ?></th><th><?php esc_html_e( 'Funcion', 'minimal-seo-theme' ); ?></th></tr></thead>
 			<tbody>

@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MST_VERSION', '2.6.0' );
+define( 'MST_VERSION', '2.6.1' );
 define( 'MST_DIR', get_template_directory() );
 define( 'MST_URI', get_template_directory_uri() );
 
@@ -21,6 +21,8 @@ require_once MST_DIR . '/inc/home-builder.php';
 require_once MST_DIR . '/inc/meta-fields.php';
 require_once MST_DIR . '/inc/content-architecture.php';
 require_once MST_DIR . '/inc/architecture-admin.php';
+require_once MST_DIR . '/inc/architecture-beginner-guide.php';
+require_once MST_DIR . '/inc/architecture-links.php';
 require_once MST_DIR . '/inc/block-patterns.php';
 require_once MST_DIR . '/inc/demo-content.php';
 require_once MST_DIR . '/inc/layout.php';
