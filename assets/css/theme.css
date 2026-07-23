@@ -481,6 +481,31 @@ a:hover {
 	will-change: transform;
 }
 
+.cluster-card__media--abstract-a,
+.post-card__thumb--abstract-a {
+	background: linear-gradient(135deg, #2d3748, #1a202c);
+}
+
+.cluster-card__media--abstract-b,
+.post-card__thumb--abstract-b {
+	background: linear-gradient(135deg, #0f766e, #134e4a);
+}
+
+.cluster-card__media--abstract-c,
+.post-card__thumb--abstract-c {
+	background: linear-gradient(135deg, #312e81, #6366f1);
+}
+
+.cluster-card__media--abstract-d,
+.post-card__thumb--abstract-d {
+	background: linear-gradient(135deg, #92400e, #78350f);
+}
+
+.cluster-card__media--abstract-e,
+.post-card__thumb--abstract-e {
+	background: linear-gradient(135deg, #581c87, #7e22ce);
+}
+
 .cluster-card:hover .cluster-card__media {
 	transform: scale(1.04);
 }
@@ -528,6 +553,77 @@ a:hover {
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	opacity: 0.85;
+}
+
+.cluster-card .cluster-card__title.mst-placeholder--on-dark {
+	background: rgba(255, 251, 235, 0.12);
+	border: 1px dashed rgba(255, 255, 255, 0.7);
+	color: #fff !important;
+	padding: 0.35em 0.5em;
+	border-radius: var(--mst-radius);
+}
+
+/* --- Portada: guía de estructura y secciones --- */
+.mst-home-structure {
+	max-width: var(--mst-section-width);
+	margin: 0 auto calc(var(--mst-space) * 1.5);
+	padding: var(--mst-space);
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	border-left: 4px solid var(--mst-color-accent);
+	border-radius: 0 var(--mst-radius) var(--mst-radius) 0;
+}
+
+.mst-home-structure__title {
+	margin: 0 0 0.5rem;
+	font-size: 1.125rem;
+}
+
+.mst-home-structure__list {
+	margin: 0.75rem 0;
+	padding-left: 1.25rem;
+	line-height: 1.55;
+}
+
+.mst-home-structure__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem 1rem;
+	align-items: center;
+	margin: 0;
+}
+
+.mst-home-structure__link {
+	font-size: 0.9375rem;
+	font-weight: 600;
+}
+
+.mst-section__header {
+	max-width: var(--mst-section-width);
+	margin: 0 auto calc(var(--mst-space) * 1.25);
+}
+
+.mst-section__header .mst-section__title {
+	margin: 0 0 0.35rem;
+	font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+}
+
+.mst-section__desc {
+	margin: 0;
+	color: var(--mst-color-muted);
+	font-size: 0.9375rem;
+	line-height: 1.5;
+}
+
+.mst-section--cluster .cluster-grid {
+	max-width: var(--mst-section-width);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mst-btn--small {
+	padding: 0.45rem 0.85rem;
+	font-size: 0.875rem;
 }
 
 /* --- Single post / página (mismo ancho que tarjetas y secciones) --- */

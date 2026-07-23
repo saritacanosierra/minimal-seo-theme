@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MST_VERSION', '2.6.4' );
+define( 'MST_VERSION', '2.6.5' );
 define( 'MST_DIR', get_template_directory() );
 define( 'MST_URI', get_template_directory_uri() );
 

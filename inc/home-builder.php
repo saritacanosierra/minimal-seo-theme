@@ -19,12 +19,15 @@ function mst_home_defaults() {
 		'mst_home_hero_btn_url'     => '#ultimas-publicaciones',
 		'mst_home_hero_image'       => 0,
 		'mst_home_cluster_enable'   => true,
+		'mst_home_cluster_title'    => mst_ph( __( 'Título de la cuadrícula destacada', 'minimal-seo-theme' ), __( 'Ejemplo: Artículos de TEMA 1 (territorio)', 'minimal-seo-theme' ) ),
+		'mst_home_cluster_desc'     => __( 'Acceso rápido al territorio. No es la guía completa (post pilar).', 'minimal-seo-theme' ),
 		'mst_home_cluster_category' => '',
 		'mst_home_cluster_posts'    => 6,
 		'mst_home_cluster_columns'  => 3,
 		'mst_home_cluster_featured' => 3,
 		'mst_home_posts_enable'     => true,
-		'mst_home_posts_title'      => mst_ph( __( 'Título de la lista de artículos', 'minimal-seo-theme' ), __( 'Ejemplo: Últimas publicaciones', 'minimal-seo-theme' ) ),
+		'mst_home_posts_title'      => mst_ph( __( 'Título de la lista de artículos', 'minimal-seo-theme' ), __( 'Ejemplo: Otros temas y artículos recientes', 'minimal-seo-theme' ) ),
+		'mst_home_posts_desc'       => __( 'Artículos fuera de la cuadrícula superior (otros territorios).', 'minimal-seo-theme' ),
 		'mst_home_cta_enable'       => true,
 		'mst_home_cta_title'        => mst_ph( __( 'Título del recuadro final', 'minimal-seo-theme' ), __( 'Ejemplo: ¿Quieres que te ayudemos?', 'minimal-seo-theme' ) ),
 		'mst_home_cta_text'         => mst_ph( __( 'Texto del recuadro final', 'minimal-seo-theme' ), __( '1 o 2 frases invitando a contactar o leer más', 'minimal-seo-theme' ) ),
@@ -89,6 +92,7 @@ function mst_home_customize_register( $wp_customize ) {
 		'mst_home_hero_btn_text'    => __( 'Cabecera — Texto del botón', 'minimal-seo-theme' ),
 		'mst_home_hero_btn_url'     => __( 'Cabecera — Enlace del botón', 'minimal-seo-theme' ),
 		'mst_home_cluster_category' => __( 'Cuadrícula — Categoría (vacío = todos los artículos)', 'minimal-seo-theme' ),
+		'mst_home_cluster_title'    => __( 'Cuadrícula — Título de sección', 'minimal-seo-theme' ),
 		'mst_home_posts_title'      => __( 'Lista de artículos — Título de sección', 'minimal-seo-theme' ),
 		'mst_home_cta_title'        => __( 'Recuadro final — Título', 'minimal-seo-theme' ),
 		'mst_home_cta_btn_text'     => __( 'Recuadro final — Texto del botón', 'minimal-seo-theme' ),
@@ -115,8 +119,10 @@ function mst_home_customize_register( $wp_customize ) {
 	}
 
 	$areas = array(
-		'mst_home_hero_text' => __( 'Cabecera — Texto debajo del título', 'minimal-seo-theme' ),
-		'mst_home_cta_text'  => __( 'Recuadro final — Texto descriptivo', 'minimal-seo-theme' ),
+		'mst_home_hero_text'        => __( 'Cabecera — Texto debajo del título', 'minimal-seo-theme' ),
+		'mst_home_cluster_desc'     => __( 'Cuadrícula — Texto explicativo (debajo del título)', 'minimal-seo-theme' ),
+		'mst_home_posts_desc'       => __( 'Lista de artículos — Texto explicativo', 'minimal-seo-theme' ),
+		'mst_home_cta_text'         => __( 'Recuadro final — Texto descriptivo', 'minimal-seo-theme' ),
 	);
 
 	foreach ( $areas as $id => $label ) {
@@ -237,6 +243,9 @@ function mst_render_home_top_sections() {
 	if ( mst_get_home_mod( 'mst_home_hero_enable' ) ) {
 		mst_render_home_hero();
 	}
+	if ( function_exists( 'mst_home_should_show_structure_guide' ) && mst_home_should_show_structure_guide() ) {
+		mst_render_home_structure_guide();
+	}
 	if ( mst_get_home_mod( 'mst_home_cluster_enable' ) ) {
 		mst_render_home_cluster();
 	}
@@ -249,6 +258,51 @@ function mst_render_home_bottom_sections() {
 	if ( mst_get_home_mod( 'mst_home_cta_enable' ) ) {
 		mst_render_home_cta();
 	}
+}
+
+/**
+ * Guía visible en portada demo: portada ≠ guía completa (pilar).
+ */
+function mst_render_home_structure_guide() {
+	$pillar1_id = (int) get_option( 'mst_pillar_page_id', 0 );
+	$pillar1    = $pillar1_id ? get_permalink( $pillar1_id ) : home_url( '/tema-1/' );
+	$guide_url  = admin_url( 'themes.php?page=mst-template-guide' );
+	?>
+	<aside class="mst-home-structure" role="note">
+		<h2 class="mst-home-structure__title"><?php esc_html_e( '¿Qué es esta página?', 'minimal-seo-theme' ); ?></h2>
+		<p><?php esc_html_e( 'Esta es la portada (blog). No es la «guía completa» ni el post pilar.', 'minimal-seo-theme' ); ?></p>
+		<ul class="mst-home-structure__list">
+			<li><strong><?php esc_html_e( 'Portada', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'acceso rápido y resumen de contenidos', 'minimal-seo-theme' ); ?></li>
+			<li><strong><?php esc_html_e( 'TEMA 1 / TEMA 2', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'territorios (páginas índice con [cluster])', 'minimal-seo-theme' ); ?></li>
+			<li><strong><?php esc_html_e( 'Guía completa', 'minimal-seo-theme' ); ?></strong> — <?php esc_html_e( 'post pilar opcional que agrupa todos los territorios', 'minimal-seo-theme' ); ?></li>
+		</ul>
+		<p class="mst-home-structure__actions">
+			<a class="mst-btn mst-btn--small" href="<?php echo esc_url( $pillar1 ); ?>"><?php esc_html_e( 'Ir al territorio TEMA 1', 'minimal-seo-theme' ); ?></a>
+			<a class="mst-home-structure__link" href="<?php echo esc_url( $guide_url ); ?>"><?php esc_html_e( 'Ver guía de la plantilla', 'minimal-seo-theme' ); ?></a>
+		</p>
+	</aside>
+	<?php
+}
+
+/**
+ * Cabecera de sección reutilizable.
+ *
+ * @param string $title       Título H2.
+ * @param string $description Párrafo opcional.
+ * @param string $title_class Clase extra del título.
+ */
+function mst_render_section_header( $title, $description = '', $title_class = 'mst-section__title' ) {
+	if ( ! $title && ! $description ) {
+		return;
+	}
+	echo '<header class="mst-section__header">';
+	if ( $title ) {
+		echo '<h2' . mst_placeholder_class_attr( $title, $title_class ) . '>' . esc_html( $title ) . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	if ( $description ) {
+		echo '<p' . mst_placeholder_class_attr( $description, 'mst-section__desc' ) . '>' . esc_html( $description ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	echo '</header>';
 }
 
 /**
@@ -316,6 +370,10 @@ function mst_render_home_cluster() {
 	$shortcode .= ']';
 
 	echo '<section class="mst-section mst-section--cluster">';
+	mst_render_section_header(
+		mst_get_home_mod( 'mst_home_cluster_title' ),
+		mst_get_home_mod( 'mst_home_cluster_desc' )
+	);
 	echo do_shortcode( $shortcode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo '</section>';
 }
@@ -328,10 +386,18 @@ function mst_render_home_posts_heading() {
 		return;
 	}
 	$title = mst_get_home_mod( 'mst_home_posts_title' );
-	if ( ! $title ) {
+	$desc  = mst_get_home_mod( 'mst_home_posts_desc' );
+	if ( ! $title && ! $desc ) {
 		return;
 	}
-	echo '<h2 id="ultimas-publicaciones"' . mst_placeholder_class_attr( $title, 'mst-section__title' ) . '>' . esc_html( $title ) . '</h2>';
+	echo '<div id="ultimas-publicaciones" class="mst-section__header mst-section__header--posts">';
+	if ( $title ) {
+		echo '<h2' . mst_placeholder_class_attr( $title, 'mst-section__title' ) . '>' . esc_html( $title ) . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	if ( $desc ) {
+		echo '<p class="mst-section__desc">' . esc_html( $desc ) . '</p>';
+	}
+	echo '</div>';
 }
 
 /**
@@ -367,3 +433,39 @@ function mst_render_home_cta() {
 function mst_home_shows_posts_grid() {
 	return is_front_page() && ! is_home() && mst_get_home_mod( 'mst_home_posts_enable' );
 }
+
+/**
+ * Evitar duplicar en portada los artículos ya mostrados en la cuadrícula cluster.
+ *
+ * @param WP_Query $query Query principal.
+ */
+function mst_filter_home_posts_query( $query ) {
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return;
+	}
+
+	if ( ! ( is_front_page() && is_home() ) ) {
+		return;
+	}
+
+	if ( ! mst_get_home_mod( 'mst_home_cluster_enable' ) ) {
+		return;
+	}
+
+	$cat = mst_get_home_mod( 'mst_home_cluster_category' );
+	if ( ! $cat ) {
+		return;
+	}
+
+	$tax_query   = $query->get( 'tax_query' );
+	$tax_query   = is_array( $tax_query ) ? $tax_query : array();
+	$tax_query[] = array(
+		'taxonomy' => 'category',
+		'field'    => is_numeric( $cat ) ? 'term_id' : 'slug',
+		'terms'    => $cat,
+		'operator' => 'NOT IN',
+	);
+
+	$query->set( 'tax_query', $tax_query ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+}
+add_action( 'pre_get_posts', 'mst_filter_home_posts_query' );

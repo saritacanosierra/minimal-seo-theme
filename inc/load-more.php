@@ -11,21 +11,26 @@ defined( 'ABSPATH' ) || exit;
  * HTML de una tarjeta de post.
  */
 function mst_get_post_card_html() {
-	$thumb_style = '';
-	if ( has_post_thumbnail() ) {
-		$thumb_url = get_the_post_thumbnail_url( null, 'mst-card' );
+	$post_id       = get_the_ID();
+	$thumb_classes = 'post-card__thumb';
+	$thumb_style   = '';
+
+	if ( mst_use_abstract_card_media( $post_id ) ) {
+		$thumb_classes .= ' post-card__thumb--abstract-' . mst_get_abstract_media_variant( $post_id );
+	} elseif ( has_post_thumbnail() ) {
+		$thumb_url = get_the_post_thumbnail_url( $post_id, 'mst-card' );
 		if ( $thumb_url ) {
 			$thumb_style = ' style="background-image:url(' . esc_url( $thumb_url ) . ')"';
 		}
 	}
 
 	ob_start();
-	$title   = get_the_title();
-	$excerpt = has_excerpt() ? wp_trim_words( get_the_excerpt(), 20 ) : '';
+	$title   = get_the_title( $post_id );
+	$excerpt = has_excerpt( $post_id ) ? wp_trim_words( get_the_excerpt( $post_id ), 20 ) : '';
 	?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class( 'post-card' ); ?>>
 		<a class="post-card__link" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( $title ); ?>">
-			<div class="post-card__thumb"<?php echo $thumb_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> role="img" aria-label="<?php echo esc_attr( $title ); ?>"></div>
+			<div class="<?php echo esc_attr( $thumb_classes ); ?>"<?php echo $thumb_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> role="img" aria-label="<?php echo esc_attr( $title ); ?>"></div>
 			<div class="post-card__body">
 				<h2<?php echo mst_placeholder_class_attr( $title, 'post-card__title' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>><?php echo esc_html( $title ); ?></h2>
 				<p class="post-card__meta">
@@ -212,8 +217,11 @@ function mst_render_single_cluster_card( $post, $atts, $is_featured ) {
 	$cta_text     = esc_html( $atts['cta_text'] );
 	$thumb_id     = get_post_thumbnail_id( $post_id );
 	$bg_style     = '';
+	$media_class  = 'cluster-card__media';
 
-	if ( $thumb_id ) {
+	if ( mst_use_abstract_card_media( $post_id ) ) {
+		$media_class .= ' cluster-card__media--abstract-' . mst_get_abstract_media_variant( $post_id );
+	} elseif ( $thumb_id ) {
 		$thumb_url = wp_get_attachment_image_url( $thumb_id, $is_featured ? 'mst-hero' : 'mst-card' );
 		if ( $thumb_url ) {
 			$bg_style = ' style="background-image:url(' . esc_url( $thumb_url ) . ')"';
@@ -221,10 +229,10 @@ function mst_render_single_cluster_card( $post, $atts, $is_featured ) {
 	}
 
 	$html  = '<article class="cluster-card' . ( $is_featured ? ' cluster-card--featured' : '' ) . '">';
-	$html .= '<div class="cluster-card__media"' . $bg_style . ' aria-hidden="true"></div>';
+	$html .= '<div class="' . esc_attr( $media_class ) . '"' . $bg_style . ' aria-hidden="true"></div>';
 	$html .= '<div class="cluster-card__overlay">';
 	$html .= mst_get_cluster_card_meta_html( $post_id );
-	$html .= '<p class="cluster-card__title">' . esc_html( get_the_title( $post_id ) ) . '</p>';
+	$html .= '<p class="cluster-card__title' . ( mst_is_placeholder_text( get_the_title( $post_id ) ) ? ' mst-placeholder mst-placeholder--on-dark' : '' ) . '">' . esc_html( get_the_title( $post_id ) ) . '</p>';
 
 	if ( $show_excerpt ) {
 		$description = mst_get_cluster_description( $post_id );

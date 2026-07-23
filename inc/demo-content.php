@@ -145,7 +145,10 @@ function mst_configure_demo_theme_mods() {
 	set_theme_mod( 'mst_home_hero_title', mst_ph( __( 'Título grande de la portada', 'minimal-seo-theme' ), __( 'Escribe el mensaje principal. Ejemplo: Recetas fáciles para cada día', 'minimal-seo-theme' ) ) );
 	set_theme_mod( 'mst_home_hero_text', mst_ph( __( 'Texto debajo del título', 'minimal-seo-theme' ), __( 'Explica en 2 frases qué encontrará el visitante. Se edita en Personalizar → Constructor de inicio', 'minimal-seo-theme' ) ) );
 	set_theme_mod( 'mst_home_hero_btn_text', mst_ph( __( 'Texto del botón', 'minimal-seo-theme' ), __( 'Ejemplo: Ver artículos / Empezar aquí', 'minimal-seo-theme' ) ) );
-	set_theme_mod( 'mst_home_posts_title', mst_ph( __( 'Título de la lista de artículos', 'minimal-seo-theme' ), __( 'Ejemplo: Últimas publicaciones / Artículos recientes', 'minimal-seo-theme' ) ) );
+	set_theme_mod( 'mst_home_cluster_title', mst_ph( __( 'Título de la cuadrícula destacada', 'minimal-seo-theme' ), __( 'Ejemplo: Artículos de TEMA 1 (territorio)', 'minimal-seo-theme' ) ) );
+	set_theme_mod( 'mst_home_cluster_desc', __( 'Acceso rápido al territorio. No es la guía completa (post pilar).', 'minimal-seo-theme' ) );
+	set_theme_mod( 'mst_home_posts_title', mst_ph( __( 'Título de la lista de artículos', 'minimal-seo-theme' ), __( 'Ejemplo: Otros temas y artículos recientes', 'minimal-seo-theme' ) ) );
+	set_theme_mod( 'mst_home_posts_desc', __( 'Artículos fuera de la cuadrícula superior (otros territorios).', 'minimal-seo-theme' ) );
 	set_theme_mod( 'mst_home_cta_title', mst_ph( __( 'Título del recuadro final', 'minimal-seo-theme' ), __( 'Ejemplo: ¿Quieres que te ayudemos? / Suscríbete gratis', 'minimal-seo-theme' ) ) );
 	set_theme_mod( 'mst_home_cta_text', mst_ph( __( 'Texto del recuadro final', 'minimal-seo-theme' ), __( 'Escribe 1 o 2 frases invitando a contactar, comprar o leer más', 'minimal-seo-theme' ) ) );
 	set_theme_mod( 'mst_home_cta_btn_text', mst_ph( __( 'Texto del botón final', 'minimal-seo-theme' ), __( 'Ejemplo: Contactar / Ver oferta / Descargar guía', 'minimal-seo-theme' ) ) );

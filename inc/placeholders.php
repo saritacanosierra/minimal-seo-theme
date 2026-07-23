@@ -58,6 +58,65 @@ function mst_ph_title( $label ) {
 }
 
 /**
+ * Variante de fondo abstracto (sin texto en imagen) para tarjetas demo.
+ *
+ * @param int $post_id ID del post.
+ */
+function mst_get_abstract_media_variant( $post_id ) {
+	$variants = array( 'a', 'b', 'c', 'd', 'e' );
+	$index    = absint( $post_id ) % count( $variants );
+	return $variants[ $index ];
+}
+
+/**
+ * ¿Usar gradiente en lugar de miniatura demo con texto superpuesto?
+ *
+ * @param int $post_id ID del post.
+ */
+function mst_use_abstract_card_media( $post_id ) {
+	$post_id = absint( $post_id );
+	if ( ! $post_id ) {
+		return false;
+	}
+
+	if ( mst_is_placeholder_text( get_the_title( $post_id ) ) ) {
+		return true;
+	}
+
+	if ( function_exists( 'mst_is_demo_placeholder_thumbnail' ) ) {
+		$thumb_id = get_post_thumbnail_id( $post_id );
+		if ( $thumb_id && mst_is_demo_placeholder_thumbnail( $thumb_id ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * ¿Mostrar guía de estructura en la portada (plantilla demo)?
+ */
+function mst_home_should_show_structure_guide() {
+	if ( ! is_front_page() || ! is_home() ) {
+		return false;
+	}
+
+	$checks = array(
+		mst_get_home_mod( 'mst_home_hero_title' ),
+		mst_get_home_mod( 'mst_home_hero_text' ),
+		mst_get_home_mod( 'mst_home_cluster_title' ),
+	);
+
+	foreach ( $checks as $text ) {
+		if ( mst_is_placeholder_text( (string) $text ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * Párrafo de ejemplo con instrucción clara.
  */
 function mst_ph_lorem() {
