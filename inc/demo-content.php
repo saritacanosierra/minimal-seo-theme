@@ -787,90 +787,167 @@ function mst_get_demo_author_id() {
 }
 
 /**
- * ¿La miniatura actual es un placeholder demo (SVG o archivo mst-demo-*)?
+ * ¿Es un adjunto generado por la plantilla demo?
+ *
+ * @param int $attachment_id ID del adjunto.
+ */
+function mst_is_theme_demo_attachment( $attachment_id ) {
+	$attachment_id = absint( $attachment_id );
+	if ( ! $attachment_id || 'attachment' !== get_post_type( $attachment_id ) ) {
+		return false;
+	}
+
+	if ( get_post_meta( $attachment_id, '_mst_demo_asset', true ) ) {
+		return true;
+	}
+
+	$file = get_attached_file( $attachment_id );
+	if ( $file && false !== strpos( basename( $file ), 'mst-demo-' ) ) {
+		return true;
+	}
+
+	$title = get_the_title( $attachment_id );
+	if ( is_string( $title ) && false !== strpos( $title, 'Imagen de ejemplo' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * ¿La miniatura actual es un placeholder demo?
  *
  * @param int $thumb_id ID del adjunto.
  */
 function mst_is_demo_placeholder_thumbnail( $thumb_id ) {
-	if ( ! $thumb_id ) {
-		return false;
-	}
-
-	if ( 'image/svg+xml' === get_post_mime_type( $thumb_id ) ) {
-		return true;
-	}
-
-	$file = get_attached_file( $thumb_id );
-	return $file && false !== strpos( basename( $file ), 'mst-demo-' );
+	return mst_is_theme_demo_attachment( $thumb_id );
 }
 
 /**
- * Adjuntar imagen demo (WebP) a una entrada o página.
+ * Clave estable del asset demo (demo-featured, demo-cwv…).
+ *
+ * @param string $filename Nombre de archivo solicitado.
+ */
+function mst_get_demo_asset_key( $filename ) {
+	return sanitize_key( pathinfo( $filename, PATHINFO_FILENAME ) );
+}
+
+/**
+ * Las tarjetas demo usan gradientes CSS; no hace falta subir imágenes repetidas.
  *
  * @param int    $post_id             ID del post.
  * @param string $filename            Nombre del archivo en assets/images.
- * @param string $title               Título del adjunto.
- * @param bool   $replace_placeholder Reemplazar miniaturas demo previas.
+ * @param string $title               Título del adjunto (ignorado; no se crean adjuntos).
+ * @param bool   $replace_placeholder Quitar miniatura demo previa si existe.
  */
 function mst_attach_demo_image( $post_id, $filename, $title = '', $replace_placeholder = false ) {
+	unset( $filename, $title );
+
 	$thumb_id = get_post_thumbnail_id( $post_id );
-	if ( $thumb_id ) {
-		if ( ! $replace_placeholder || ! mst_is_demo_placeholder_thumbnail( $thumb_id ) ) {
-			return;
-		}
+	if ( ! $thumb_id ) {
+		return;
+	}
+
+	if ( $replace_placeholder && mst_is_demo_placeholder_thumbnail( $thumb_id ) ) {
 		delete_post_thumbnail( $post_id );
 	}
+}
 
-	$source = MST_DIR . '/assets/images/' . $filename;
-	if ( ! file_exists( $source ) ) {
-		return;
-	}
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/media.php';
-	require_once ABSPATH . 'wp-admin/includes/image.php';
-
-	$upload = wp_upload_dir();
-	if ( ! empty( $upload['error'] ) ) {
-		return;
-	}
-
-	$dest_name = 'mst-' . sanitize_file_name( $filename );
-	$dest      = trailingslashit( $upload['path'] ) . $dest_name;
-
-	if ( ! file_exists( $dest ) ) {
-		copy( $source, $dest );
-	}
-
-	$ext  = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
-	$mime = 'image/png';
-	if ( 'svg' === $ext ) {
-		$mime = 'image/svg+xml';
-	} elseif ( 'jpg' === $ext || 'jpeg' === $ext ) {
-		$mime = 'image/jpeg';
-	} elseif ( 'webp' === $ext ) {
-		$mime = 'image/webp';
-	}
-
-	$attachment = array(
-		'post_mime_type' => $mime,
-		'post_title'     => $title ? $title : basename( $filename, '.' . $ext ),
-		'post_content'   => '',
-		'post_status'    => 'inherit',
+/**
+ * Eliminar adjuntos demo duplicados y miniaturas asociadas.
+ *
+ * @return array{deleted:int,thumbs:int}
+ */
+function mst_cleanup_saturated_demo_media() {
+	$attachments = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
 	);
 
-	$attach_id = wp_insert_attachment( $attachment, $dest, $post_id );
-	if ( is_wp_error( $attach_id ) || ! $attach_id ) {
+	$groups   = array();
+	$deleted  = 0;
+	$orphan_ids = array();
+
+	foreach ( $attachments as $attachment_id ) {
+		if ( ! mst_is_theme_demo_attachment( $attachment_id ) ) {
+			continue;
+		}
+
+		$file = get_attached_file( $attachment_id );
+		$key  = $file ? strtolower( basename( $file ) ) : 'id-' . $attachment_id;
+		$key  = preg_replace( '/-\d+(?=\.[^.]+$)/', '', $key );
+
+		if ( ! isset( $groups[ $key ] ) ) {
+			$groups[ $key ] = array();
+		}
+		$groups[ $key ][] = (int) $attachment_id;
+	}
+
+	foreach ( $groups as $ids ) {
+		sort( $ids, SORT_NUMERIC );
+		$keep = array_shift( $ids );
+		foreach ( $ids as $dup_id ) {
+			$orphan_ids[] = $dup_id;
+			wp_delete_attachment( $dup_id, true );
+			++$deleted;
+		}
+		// El asset compartido tampoco debe quedar en la biblioteca.
+		if ( $keep ) {
+			$orphan_ids[] = $keep;
+			wp_delete_attachment( $keep, true );
+			++$deleted;
+		}
+	}
+
+	$thumbs = 0;
+	$content_ids = get_posts(
+		array(
+			'post_type'      => array( 'post', 'page' ),
+			'post_status'    => 'any',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		)
+	);
+
+	foreach ( $content_ids as $post_id ) {
+		$thumb_id = (int) get_post_thumbnail_id( $post_id );
+		if ( ! $thumb_id ) {
+			continue;
+		}
+		if ( in_array( $thumb_id, $orphan_ids, true ) || mst_is_theme_demo_attachment( $thumb_id ) ) {
+			delete_post_thumbnail( $post_id );
+			++$thumbs;
+		}
+	}
+
+	delete_option( 'mst_demo_media_registry' );
+
+	return array(
+		'deleted' => $deleted,
+		'thumbs'  => $thumbs,
+	);
+}
+
+/**
+ * Limpieza única de medios demo duplicados (migración).
+ */
+function mst_maybe_cleanup_demo_media() {
+	if ( get_option( 'mst_demo_media_cleaned', '' ) === '2.6.8' ) {
 		return;
 	}
 
-	$metadata = wp_generate_attachment_metadata( $attach_id, $dest );
-	if ( ! is_wp_error( $metadata ) && $metadata ) {
-		wp_update_attachment_metadata( $attach_id, $metadata );
+	if ( ! current_user_can( 'upload_files' ) ) {
+		return;
 	}
 
-	set_post_thumbnail( $post_id, $attach_id );
+	mst_cleanup_saturated_demo_media();
+	update_option( 'mst_demo_media_cleaned', '2.6.8' );
 }
+add_action( 'admin_init', 'mst_maybe_cleanup_demo_media', 30 );
 
 /**
  * @deprecated 2.1.0 Usar mst_seed_demo_posts().
